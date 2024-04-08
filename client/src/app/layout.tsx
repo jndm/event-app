@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { cn } from "@client/lib/utils";
+import { Toaster } from "@client/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +18,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={cn("min-h-screen antialiased", inter.className)}>
+        <main className="flex flex-col items-center justify-between px-24">
+          <div className="z-10 max-w-5xl w-full items-center justify-between text-sm lg:flex">
+            {children}
+          </div>
+        </main>
+        <Toaster />
+      </body>
     </html>
   );
 }

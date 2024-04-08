@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "paths": {
       "@server/*": ["./server/src/*"],
-      "@web/*": ["./client/*"]
+      "@client/*": ["./client/src/*"]
     }
   }
 }
