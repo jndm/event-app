@@ -6,9 +6,9 @@ services:
     restart: always
     shm_size: 128mb
     environment:
-      POSTGRES_PASSWORD: testpw
-      POSTGRES_USER: dbuser
-      POSTGRES_DB: testdb
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=testpw
+      - POSTGRES_DB=testdb
     ports:
       - "5432:5432"
     volumes:
