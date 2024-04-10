@@ -1,1 +1,1 @@
-Small application for getting experience with NextJS (and refreshing React skills) and using node as a backend. Currently using NestJS.
+Small application for getting experience with NextJS (and refreshing React skills) and using node as a backend with tRPC to get some experince with it and to get some change from basic REST API. Currently using NestJS but might consider swapping out of it due.
