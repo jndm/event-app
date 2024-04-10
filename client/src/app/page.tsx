@@ -3,7 +3,7 @@ import { trpc } from "@client/lib/trpc";
 
 export default async function Home() {
   try {
-    const resp = await trpc.hello.query({ name: "Joonas" });
+    const resp = await trpc.test.events.query({ name: "asd" });
 
     return <div>{resp}</div>;
   } catch (err: any) {

@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   EventCreateInput,
   eventCreateSchema,
-} from "@server/lib/schemas/event.schema";
+} from "@server/events/schemas/event.schema";
 import { useForm } from "react-hook-form";
 import createEvent from "@client/app/events/(actions)/event.actions";
 import { useToast } from "@client/components/ui/use-toast";
@@ -34,7 +34,7 @@ export default function NewEventForm() {
   async function handleSubmit(values: EventCreateInput) {
     const success = await createEvent(values);
 
-    if (success) {
+    if (!success) {
       toast({
         title: "Event creation failed.",
         description: "Please try again later.",

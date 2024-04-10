@@ -2,7 +2,7 @@ import { trpc } from "@client/lib/trpc";
 import NewEventForm from "./(components)/newEventForm";
 
 export default async function EventsPage() {
-  const events = await trpc.events.query();
+  const events = await trpc.events.get_all.query();
 
   return (
     <div className="space-y-6">
