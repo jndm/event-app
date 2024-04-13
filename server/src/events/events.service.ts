@@ -1,31 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import { Database } from '@server/database/database';
+import { Event, NewEvent } from '@server/database/tables/event';
 
 @Injectable()
 export class EventService {
-  private createdEvents = [
-    {
-      id: 1,
-      name: 'Event 1',
-      description: 'Description 1',
-    },
-    {
-      id: 2,
-      name: 'Event 2',
-      description: 'Description 2',
-    },
-  ];
+  constructor(private readonly database: Database) {}
 
-  getEvents() {
-    return this.createdEvents;
+  getEvents(): Promise<Event[]> {
+    return this.database.selectFrom('event').selectAll().execute();
   }
-
-  addEvent(input: { name: string; description: string }) {
-    const saved = {
-      id: this.createdEvents.length + 1,
-      ...input,
-    };
-
-    this.createdEvents.push(saved);
-    return saved;
+  async addEvent(input: NewEvent): Promise<bigint | undefined> {
+    return (
+      await this.database.insertInto('event').values(input).executeTakeFirst()
+    ).insertId;
   }
 }

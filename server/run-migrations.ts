@@ -7,7 +7,7 @@ import {
   PostgresDialect,
   FileMigrationProvider,
 } from 'kysely';
-import { Database } from '@server/database/types';
+import { Database } from '@server/database/database';
 
 async function migrateToLatest() {
   const db = new Kysely<Database>({
