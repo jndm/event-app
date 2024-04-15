@@ -34,6 +34,9 @@ async function migrateToLatest() {
 
   const { error, results } = await migrator.migrateToLatest();
 
+  // uncomment to run down one step - TODO: better way to do this
+  //const { error, results } = await migrator.migrateDown();
+
   results?.forEach((it) => {
     if (it.status === 'Success') {
       console.log(`migration "${it.migrationName}" was executed successfully`);

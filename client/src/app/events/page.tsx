@@ -1,8 +1,13 @@
 import { trpc } from "@client/lib/trpc";
 import NewEventForm from "./(components)/newEventForm";
+import DeleteEventButton from "./(components)/deleteFormButton";
 
 export default async function EventsPage() {
+  console.log("EventsPage init");
+
   const events = await trpc.events.get_all.query();
+
+  console.log(events);
 
   return (
     <div className="space-y-6">
@@ -18,7 +23,11 @@ export default async function EventsPage() {
             <h2 className="text-2xl font-semibold tracking-tight">
               {event.name}
             </h2>
-            <p className="text-lg">{event.description}</p>
+            <div className="flex flex-row justify-between">
+              <p className="text-lg">{event.event_id}</p>
+              <p className="text-lg">{event.description}</p>
+              <DeleteEventButton eventId={event.event_id}></DeleteEventButton>
+            </div>
             {index !== events.length - 1 && <hr />}
           </div>
         ))}

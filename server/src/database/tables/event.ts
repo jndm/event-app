@@ -7,5 +7,5 @@ export interface EventTable {
 }
 
 export type Event = Selectable<EventTable>;
-export type NewEvent = Insertable<EventTable>;
+export type EventInsert = Insertable<EventTable>;
 export type EventUpdate = Updateable<EventTable>;

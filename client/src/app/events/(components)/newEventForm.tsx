@@ -17,8 +17,8 @@ import {
   eventCreateSchema,
 } from "@server/events/schemas/event.schema";
 import { useForm } from "react-hook-form";
-import createEvent from "@client/app/events/(actions)/event.actions";
 import { useToast } from "@client/components/ui/use-toast";
+import { createEvent } from "../(actions)/event.actions";
 
 export default function NewEventForm() {
   const { toast } = useToast();
