@@ -5,7 +5,7 @@ import {
   DATABASE_OPTIONS,
 } from './kysely.module-definitions';
 import { Global, Module } from '@nestjs/common';
-import { Pool } from 'pg';
+import * as pg from 'pg';
 
 @Global()
 @Module({
@@ -15,11 +15,14 @@ import { Pool } from 'pg';
       provide: Database,
       inject: [DATABASE_OPTIONS],
       useFactory: (databaseOptions: DatabaseOptions) => {
-        console.log('jees');
-        console.log(databaseOptions);
+        const int8TypeId = 20;
+
+        pg.types.setTypeParser(int8TypeId, (val) => {
+          return parseInt(val, 10);
+        });
 
         const dialect = new PostgresDialect({
-          pool: new Pool({
+          pool: new pg.Pool({
             host: databaseOptions.host,
             port: databaseOptions.port,
             user: databaseOptions.user,
