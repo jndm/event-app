@@ -1,13 +1,16 @@
 import { trpc } from "@client/lib/trpc";
 import NewEventForm from "./(components)/newEventForm";
 import DeleteEventButton from "./(components)/deleteFormButton";
+import { unstable_cache } from "next/cache";
 
 export default async function EventsPage() {
   console.log("EventsPage init");
 
-  const events = await trpc.events.get_all.query();
-
-  console.log(events);
+  const events = await unstable_cache(
+    async () => trpc.events.getAll.query(),
+    ["all-events"],
+    { tags: ["all-events"] }
+  )();
 
   return (
     <div className="space-y-6">

@@ -31,7 +31,7 @@ export class EventService {
   async updateEvent(input: EventUpdate): Promise<void> {
     if (!input.event_id) throw new Error('event_id is required');
 
-    this.database
+    await this.database
       .updateTable('event')
       .set(input)
       .where('event_id', '=', input.event_id)
@@ -39,7 +39,7 @@ export class EventService {
   }
 
   async deleteEvent(eventId: number): Promise<void> {
-    this.database
+    await this.database
       .deleteFrom('event')
       .where('event_id', '=', eventId)
       .executeTakeFirst();

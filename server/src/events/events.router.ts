@@ -16,12 +16,9 @@ export class EventRouter {
   ) {}
 
   router = this.trpcService.router({
-    get_all: this.trpcService.procedure //
+    getAll: this.trpcService.procedure //
       .query(async () => {
-        // TODO: For some reason after delete and on nextjs page revalidate this returns old data
-        const events = await this.eventService.getEvents();
-        console.log('events', events);
-        return events;
+        return await this.eventService.getEvents();
       }),
 
     add: this.trpcService.procedure
@@ -33,7 +30,6 @@ export class EventRouter {
     delete: this.trpcService.procedure
       .input({ ...eventDeleteSchema })
       .mutation(async ({ input }) => {
-        console.log('input', input);
         return await this.eventService.deleteEvent(input.eventId);
       }),
 
