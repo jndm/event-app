@@ -20,6 +20,7 @@ import { useForm } from "react-hook-form";
 import { useToast } from "@client/components/ui/use-toast";
 import { createEvent } from "../(actions)/event.actions";
 import { DatePicker } from "@client/components/ui/datepicker";
+import { format } from "date-fns";
 
 export default function NewEventForm() {
   const { toast } = useToast();
@@ -34,7 +35,11 @@ export default function NewEventForm() {
 
   async function handleSubmit(values: EventCreateInput) {
     console.log(values);
-    const success = await createEvent(values);
+    const success = await createEvent({
+      ...values,
+      eventStartDate: format(values.eventStartDate, "yyyy-MM-dd").toString(),
+      eventStartTime: format("12:00", "HH:mm").toString(),
+    });
 
     if (!success) {
       toast({
@@ -90,7 +95,7 @@ export default function NewEventForm() {
 
           <FormField
             control={form.control}
-            name="eventStart"
+            name="eventStartDate"
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Event date</FormLabel>

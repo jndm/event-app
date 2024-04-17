@@ -7,6 +7,7 @@ import {
 import { TrpcService } from '@server/trpc/trpc.service';
 import { EventService } from './events.service';
 import { TRPCError } from '@trpc/server';
+import { toDate } from 'date-fns';
 
 @Injectable()
 export class EventRouter {
@@ -25,7 +26,9 @@ export class EventRouter {
       .input({ ...eventCreateSchema })
       .mutation(async ({ input }) => {
         return await this.eventService.addEvent({
-          event_start: input.eventStart,
+          event_start: toDate(
+            `${input.eventStartDate}T${input.eventStartTime}`,
+          ),
           ...input,
         });
       }),
