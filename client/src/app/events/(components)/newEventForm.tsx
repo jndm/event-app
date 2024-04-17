@@ -19,6 +19,7 @@ import {
 import { useForm } from "react-hook-form";
 import { useToast } from "@client/components/ui/use-toast";
 import { createEvent } from "../(actions)/event.actions";
+import { DatePicker } from "@client/components/ui/datepicker";
 
 export default function NewEventForm() {
   const { toast } = useToast();
@@ -32,6 +33,7 @@ export default function NewEventForm() {
   });
 
   async function handleSubmit(values: EventCreateInput) {
+    console.log(values);
     const success = await createEvent(values);
 
     if (!success) {
@@ -39,7 +41,7 @@ export default function NewEventForm() {
         title: "Event creation failed.",
         description: "Please try again later.",
         variant: "destructive",
-        duration: 1000,
+        duration: 4000,
       });
       return;
     }
@@ -85,6 +87,19 @@ export default function NewEventForm() {
               </FormItem>
             )}
           />
+
+          <FormField
+            control={form.control}
+            name="eventStart"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Event date</FormLabel>
+                <DatePicker value={field.value} onChange={field.onChange} />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <div className="flex justify-end">
             <Button type="submit">Submit</Button>
           </div>

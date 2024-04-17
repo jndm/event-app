@@ -2,7 +2,7 @@
 
 import { trpc } from "@client/lib/trpc";
 import { EventCreateInput } from "@server/events/schemas/event.schema";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 export async function createEvent(values: EventCreateInput) {
   try {
@@ -10,6 +10,7 @@ export async function createEvent(values: EventCreateInput) {
     revalidateTag("all-events");
     return true;
   } catch (error) {
+    console.error(error);
     return false;
   }
 }
@@ -21,6 +22,7 @@ export async function deleteEvent(eventId: number) {
 
     return true;
   } catch (error) {
+    console.error(error);
     return false;
   }
 }
