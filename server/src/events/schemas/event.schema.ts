@@ -10,10 +10,8 @@ export const eventCreateSchema = z.object({
     .max(1000, {
       message: "Event description can't be longer than 1000 characters",
     }),
-  eventStartDate: z
-    .string({ required_error: 'Event start date is required' })
-    .datetime(),
-  eventStartTime: z.string().datetime('HH:mm'),
+  eventStartDate: z.date({ required_error: 'Event date is required' }),
+  eventStartTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/),
 });
 
 export const eventUpdateSchema = z.object({

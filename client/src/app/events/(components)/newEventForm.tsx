@@ -30,16 +30,13 @@ export default function NewEventForm() {
     defaultValues: {
       name: "",
       description: "",
+      eventStartTime: "12:00",
     },
   });
 
   async function handleSubmit(values: EventCreateInput) {
     console.log(values);
-    const success = await createEvent({
-      ...values,
-      eventStartDate: format(values.eventStartDate, "yyyy-MM-dd").toString(),
-      eventStartTime: format("12:00", "HH:mm").toString(),
-    });
+    const success = await createEvent(values);
 
     if (!success) {
       toast({
@@ -55,6 +52,12 @@ export default function NewEventForm() {
     form.reset();
   }
 
+  function handleInvalid(values: any) {
+    console.log("invalid", values);
+
+    console.log(form.formState);
+  }
+
   return (
     <>
       <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
@@ -62,7 +65,10 @@ export default function NewEventForm() {
       </h2>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+        <form
+          onSubmit={form.handleSubmit(handleSubmit, handleInvalid)}
+          className="space-y-8"
+        >
           <FormField
             control={form.control}
             name="name"
