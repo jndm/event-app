@@ -10,7 +10,7 @@ import { Button } from "./button";
 
 export function DatePicker(props: {
   value: Date;
-  onChange: (date: any) => void;
+  onChange: (date: Date | undefined) => void;
 }) {
   return (
     <Popover>

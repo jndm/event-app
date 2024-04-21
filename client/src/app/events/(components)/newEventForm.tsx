@@ -20,7 +20,6 @@ import { useForm } from "react-hook-form";
 import { useToast } from "@client/components/ui/use-toast";
 import { createEvent } from "../(actions)/event.actions";
 import { DatePicker } from "@client/components/ui/datepicker";
-import { format } from "date-fns";
 
 export default function NewEventForm() {
   const { toast } = useToast();
