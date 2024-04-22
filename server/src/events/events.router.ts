@@ -7,7 +7,6 @@ import {
 import { TrpcService } from '@server/trpc/trpc.service';
 import { EventService } from './events.service';
 import { TRPCError } from '@trpc/server';
-import { toDate } from 'date-fns';
 
 @Injectable()
 export class EventRouter {

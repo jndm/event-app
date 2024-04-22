@@ -20,6 +20,9 @@ import { useForm } from "react-hook-form";
 import { useToast } from "@client/components/ui/use-toast";
 import { createEvent } from "../(actions)/event.actions";
 import { DatePicker } from "@client/components/ui/datepicker";
+import { IconInput } from "@client/components/ui/icon-input";
+import { ClockIcon } from "lucide-react";
+import { TimeInput } from "@client/components/ui/time-input";
 
 export default function NewEventForm() {
   const { toast } = useToast();
@@ -77,7 +80,6 @@ export default function NewEventForm() {
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
-                <FormDescription>Name of the event.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -92,23 +94,40 @@ export default function NewEventForm() {
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
-                <FormDescription>Describe event.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="eventStartDate"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Event date</FormLabel>
-                <DatePicker value={field.value} onChange={field.onChange} />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="flex flex-row gap-8">
+            <FormField
+              control={form.control}
+              name="eventStartDate"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Event date</FormLabel>
+                  <FormControl>
+                    <DatePicker value={field.value} onChange={field.onChange} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="eventStartTime"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Event time</FormLabel>
+                  <FormControl>
+                    <TimeInput {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <div className="flex justify-end">
             <Button type="submit">Submit</Button>
