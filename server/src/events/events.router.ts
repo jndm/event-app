@@ -25,12 +25,7 @@ export class EventRouter {
     add: this.trpcService.procedure
       .input({ ...eventCreateSchema })
       .mutation(async ({ input }) => {
-        return await this.eventService.addEvent({
-          event_start: toDate(
-            `${input.eventStartDate}T${input.eventStartTime}`,
-          ),
-          ...input,
-        });
+        return await this.eventService.addEvent(input);
       }),
 
     delete: this.trpcService.procedure
@@ -52,10 +47,7 @@ export class EventRouter {
           });
         }
 
-        return await this.eventService.updateEvent({
-          event_id: input.eventId,
-          ...input,
-        });
+        return await this.eventService.updateEvent(input);
       }),
   });
 }

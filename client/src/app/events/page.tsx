@@ -26,9 +26,10 @@ export default async function EventsPage() {
             <h2 className="text-2xl font-semibold tracking-tight">
               {event.name}
             </h2>
-            <div className="flex flex-row justify-between">
+            <div className="flex flex-col justify-between">
               <p className="text-lg">{event.event_id}</p>
               <p className="text-lg">{event.description}</p>
+              <p className="text-lg">{event.event_start}</p>
               <DeleteEventButton eventId={event.event_id}></DeleteEventButton>
             </div>
             {index !== events.length - 1 && <hr />}

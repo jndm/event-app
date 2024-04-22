@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Database } from '@server/database/database';
-import { Event, EventInsert, EventUpdate } from '@server/database/tables/event';
+import { Event } from '@server/database/tables/event';
+import { EventCreateInput, EventUpdateInput } from './schemas/event.schema';
+import { format } from 'date-fns';
 
 @Injectable()
 export class EventService {
@@ -21,20 +23,29 @@ export class EventService {
       .executeTakeFirst();
   }
 
-  async addEvent(input: EventInsert): Promise<void> {
+  async addEvent(input: EventCreateInput): Promise<void> {
     await this.database //
       .insertInto('event')
-      .values(input)
+      .values({
+        name: input.name,
+        description: input.description,
+        event_start: new Date(
+          `${format(input.eventStartDate, 'yyyy-MM-dd')}T${input.eventStartTime}`,
+        ),
+      })
       .executeTakeFirst();
   }
 
-  async updateEvent(input: EventUpdate): Promise<void> {
-    if (!input.event_id) throw new Error('event_id is required');
+  async updateEvent(input: EventUpdateInput): Promise<void> {
+    if (!input.eventId) throw new Error('event_id is required');
 
     await this.database
       .updateTable('event')
-      .set(input)
-      .where('event_id', '=', input.event_id)
+      .set({
+        name: input.name,
+        description: input.description,
+      })
+      .where('event_id', '=', input.eventId)
       .executeTakeFirst();
   }
 
