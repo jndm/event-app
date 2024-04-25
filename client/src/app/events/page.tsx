@@ -22,15 +22,15 @@ export default async function EventsPage() {
 
       <div className="space-y-6">
         {events.map((event, index) => (
-          <div key={event.event_id} className="space-y-2">
+          <div key={event.eventId} className="space-y-2">
             <h2 className="text-2xl font-semibold tracking-tight">
               {event.name}
             </h2>
             <div className="flex flex-col justify-between">
-              <p className="text-lg">{event.event_id}</p>
+              <p className="text-lg">{event.eventId}</p>
               <p className="text-lg">{event.description}</p>
-              <p className="text-lg">{event.event_start}</p>
-              <DeleteEventButton eventId={event.event_id}></DeleteEventButton>
+              <p className="text-lg">{event.eventStart}</p>
+              <DeleteEventButton eventId={event.eventId}></DeleteEventButton>
             </div>
             {index !== events.length - 1 && <hr />}
           </div>

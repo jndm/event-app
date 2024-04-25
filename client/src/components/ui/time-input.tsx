@@ -49,7 +49,7 @@ const TimeInput = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div
         className={cn(
-          "flex items-center h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground [&:has(:focus-visible)]:ring-ring [&:has(:focus-visible)]:ring-2 disabled:cursor-not-allowed disabled:opacity-50",
+          "flex items-center h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground [&:has(:focus-visible)]:ring-ring [&:has(:focus-visible)]:ring-2 disabled:cursor-not-allowed disabled:opacity-50",
           className
         )}
       >

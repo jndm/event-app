@@ -1,5 +1,12 @@
 import { z } from 'zod';
 
+export type Event = {
+  eventId: number;
+  name: string;
+  description: string | undefined;
+  eventStart: Date;
+};
+
 export const eventCreateSchema = z.object({
   name: z
     .string()

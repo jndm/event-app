@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Database } from '@server/database/database';
-import { Event } from '@server/database/tables/event';
-import { EventCreateInput, EventUpdateInput } from './schemas/event.schema';
+import { EventSelect } from '@server/database/tables/event';
+import {
+  Event,
+  EventCreateInput,
+  EventUpdateInput,
+} from './schemas/event.schema';
 import { format } from 'date-fns';
 
 @Injectable()
@@ -9,13 +13,22 @@ export class EventService {
   constructor(private readonly database: Database) {}
 
   async getEvents(): Promise<Event[]> {
-    return await this.database //
+    const dbEvents = await this.database //
       .selectFrom('event')
       .selectAll()
       .execute();
+
+    return (
+      dbEvents.map((event) => ({
+        eventId: event.event_id,
+        name: event.name,
+        description: event.description,
+        eventStart: event.event_start,
+      })) ?? []
+    );
   }
 
-  async getEvent(eventId: number): Promise<Event | undefined> {
+  async getEvent(eventId: number): Promise<EventSelect | undefined> {
     return await this.database
       .selectFrom('event')
       .selectAll()

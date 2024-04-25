@@ -16,6 +16,6 @@ export interface EventTable {
   updated_at: ColumnType<Date | undefined, never, Date>;
 }
 
-export type Event = Selectable<EventTable>;
+export type EventSelect = Selectable<EventTable>;
 export type EventInsert = Insertable<EventTable>;
 export type EventUpdate = Updateable<EventTable>;

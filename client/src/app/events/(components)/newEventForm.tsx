@@ -4,7 +4,6 @@ import { Button } from "@client/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,8 +19,6 @@ import { useForm } from "react-hook-form";
 import { useToast } from "@client/components/ui/use-toast";
 import { createEvent } from "../(actions)/event.actions";
 import { DatePicker } from "@client/components/ui/datepicker";
-import { IconInput } from "@client/components/ui/icon-input";
-import { ClockIcon } from "lucide-react";
 import { TimeInput } from "@client/components/ui/time-input";
 
 export default function NewEventForm() {
@@ -54,12 +51,6 @@ export default function NewEventForm() {
     form.reset();
   }
 
-  function handleInvalid(values: any) {
-    console.log("invalid", values);
-
-    console.log(form.formState);
-  }
-
   return (
     <>
       <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
@@ -67,10 +58,7 @@ export default function NewEventForm() {
       </h2>
 
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(handleSubmit, handleInvalid)}
-          className="space-y-8"
-        >
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
           <FormField
             control={form.control}
             name="name"

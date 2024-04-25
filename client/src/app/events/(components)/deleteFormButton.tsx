@@ -9,8 +9,6 @@ export default function DeleteEventButton(props: { eventId: number }) {
   const { toast } = useToast();
 
   async function handleDelete(eventId: number) {
-    console.log("eventid");
-
     const success = await deleteEvent(eventId);
 
     if (!success) {
