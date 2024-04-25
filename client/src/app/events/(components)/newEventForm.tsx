@@ -20,9 +20,13 @@ import { useToast } from "@client/components/ui/use-toast";
 import { createEvent } from "../(actions)/event.actions";
 import { DatePicker } from "@client/components/ui/datepicker";
 import { TimeInput } from "@client/components/ui/time-input";
+import { useState } from "react";
+import { Switch } from "@client/components/ui/switch";
+import { Label } from "@client/components/ui/label";
 
 export default function NewEventForm() {
   const { toast } = useToast();
+  const [endTimeToggle, setEndTimeToggle] = useState(false);
 
   const form = useForm<EventCreateInput>({
     resolver: zodResolver(eventCreateSchema),
@@ -30,11 +34,19 @@ export default function NewEventForm() {
       name: "",
       description: "",
       eventStartTime: "12:00",
+      eventEndTime: undefined,
     },
   });
 
   async function handleSubmit(values: EventCreateInput) {
     console.log(values);
+
+    // Do not send set end time if not toggled on
+    if (!endTimeToggle) {
+      delete values.eventEndDate;
+      delete values.eventEndTime;
+    }
+
     const success = await createEvent(values);
 
     if (!success) {
@@ -72,7 +84,6 @@ export default function NewEventForm() {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="description"
@@ -86,7 +97,6 @@ export default function NewEventForm() {
               </FormItem>
             )}
           />
-
           <div className="flex flex-row gap-8">
             <FormField
               control={form.control}
@@ -117,6 +127,50 @@ export default function NewEventForm() {
             />
           </div>
 
+          <div className="flex flex-row items-center space-x-2">
+            <Switch
+              id="set-ending"
+              onCheckedChange={() => setEndTimeToggle(!endTimeToggle)}
+            >
+              Add end time
+            </Switch>
+            <Label htmlFor="set-ending">Add end time</Label>
+          </div>
+
+          {endTimeToggle && (
+            <div className="flex flex-row gap-8">
+              <FormField
+                control={form.control}
+                name="eventEndDate"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>End date</FormLabel>
+                    <FormControl>
+                      <DatePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="eventEndTime"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>End time</FormLabel>
+                    <FormControl>
+                      <TimeInput {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          )}
           <div className="flex justify-end">
             <Button type="submit">Submit</Button>
           </div>

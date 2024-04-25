@@ -5,6 +5,7 @@ export type Event = {
   name: string;
   description: string | undefined;
   eventStart: Date;
+  eventEnd: Date | undefined;
 };
 
 export const eventCreateSchema = z.object({
@@ -19,6 +20,14 @@ export const eventCreateSchema = z.object({
     }),
   eventStartDate: z.coerce.date({ required_error: 'Event date is required' }),
   eventStartTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/),
+
+  // TODO: Add validation that these are required if toggled
+  eventEndDate: z.coerce.date().optional(),
+  eventEndTime: z
+    .string()
+    .regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/)
+    .optional()
+    .or(z.literal('')),
 });
 
 export const eventUpdateSchema = z.object({

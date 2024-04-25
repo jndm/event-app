@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  Event,
   eventCreateSchema,
   eventDeleteSchema,
   eventUpdateSchema,
@@ -17,7 +18,7 @@ export class EventRouter {
 
   router = this.trpcService.router({
     getAll: this.trpcService.procedure //
-      .query(async () => {
+      .query(async (): Promise<Event[]> => {
         return await this.eventService.getEvents();
       }),
 

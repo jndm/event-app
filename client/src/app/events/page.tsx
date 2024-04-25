@@ -2,6 +2,7 @@ import { trpc } from "@client/lib/trpc";
 import NewEventForm from "./(components)/newEventForm";
 import DeleteEventButton from "./(components)/deleteFormButton";
 import { unstable_cache } from "next/cache";
+import { format } from "date-fns";
 
 export default async function EventsPage() {
   console.log("EventsPage init");
@@ -29,7 +30,16 @@ export default async function EventsPage() {
             <div className="flex flex-col justify-between">
               <p className="text-lg">{event.eventId}</p>
               <p className="text-lg">{event.description}</p>
-              <p className="text-lg">{event.eventStart}</p>
+              <p className="text-lg">
+                Starting:{" "}
+                {format(new Date(event.eventStart), "dd.MM.yyyy HH:mm")}
+              </p>
+              <p className="text-lg">
+                Ending:{" "}
+                {!!event.eventEnd
+                  ? format(new Date(event.eventEnd), "dd.MM.yyyy HH:mm")
+                  : "-"}
+              </p>
               <DeleteEventButton eventId={event.eventId}></DeleteEventButton>
             </div>
             {index !== events.length - 1 && <hr />}

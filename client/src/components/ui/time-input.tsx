@@ -40,6 +40,13 @@ const TimeInput = React.forwardRef<HTMLInputElement, InputProps>(
               2
             )}:${e.target.value.slice(2, 4)}`;
           }
+        } else {
+          const [hours, minutes] = e.target.value.split(":");
+          if (parseInt(hours, 10) > 23) {
+            e.target.value = "23:59";
+          } else if (parseInt(minutes, 10) > 59) {
+            e.target.value = `${hours}:59`;
+          }
         }
       }
 

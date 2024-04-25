@@ -9,7 +9,7 @@ import { Calendar } from "./calendar";
 import { Button } from "./button";
 
 export function DatePicker(props: {
-  value: Date;
+  value: Date | undefined;
   onChange: (date: Date | undefined) => void;
 }) {
   return (
