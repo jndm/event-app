@@ -20,13 +20,10 @@ import { useToast } from "@client/components/ui/use-toast";
 import { createEvent } from "../(actions)/event.actions";
 import { DatePicker } from "@client/components/ui/datepicker";
 import { TimeInput } from "@client/components/ui/time-input";
-import { useState } from "react";
 import { Switch } from "@client/components/ui/switch";
-import { Label } from "@client/components/ui/label";
 
 export default function NewEventForm() {
   const { toast } = useToast();
-  const [endTimeToggle, setEndTimeToggle] = useState(false);
 
   const form = useForm<EventCreateInput>({
     resolver: zodResolver(eventCreateSchema),
@@ -35,14 +32,13 @@ export default function NewEventForm() {
       description: "",
       eventStartTime: "12:00",
       eventEndTime: undefined,
+      eventEndEnabled: false,
     },
   });
 
   async function handleSubmit(values: EventCreateInput) {
-    console.log(values);
-
     // Do not send set end time if not toggled on
-    if (!endTimeToggle) {
+    if (!values.eventEndEnabled) {
       delete values.eventEndDate;
       delete values.eventEndTime;
     }
@@ -63,6 +59,10 @@ export default function NewEventForm() {
     form.reset();
   }
 
+  const handleInvalid = () => {
+    console.log(form.formState.errors);
+  };
+
   return (
     <>
       <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
@@ -70,7 +70,10 @@ export default function NewEventForm() {
       </h2>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+        <form
+          onSubmit={form.handleSubmit(handleSubmit, handleInvalid)}
+          className="space-y-8"
+        >
           <FormField
             control={form.control}
             name="name"
@@ -127,17 +130,25 @@ export default function NewEventForm() {
             />
           </div>
 
-          <div className="flex flex-row items-center space-x-2">
-            <Switch
-              id="set-ending"
-              onCheckedChange={() => setEndTimeToggle(!endTimeToggle)}
-            >
-              Add end time
-            </Switch>
-            <Label htmlFor="set-ending">Add end time</Label>
-          </div>
+          <FormField
+            control={form.control}
+            name="eventEndEnabled"
+            render={({ field }) => (
+              <FormItem className="flex items-center space-x-2">
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  >
+                    Add end time
+                  </Switch>
+                </FormControl>
+                <FormLabel>Add end time</FormLabel>
+              </FormItem>
+            )}
+          />
 
-          {endTimeToggle && (
+          {form.getValues().eventEndEnabled && (
             <div className="flex flex-row gap-8">
               <FormField
                 control={form.control}
