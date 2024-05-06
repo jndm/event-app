@@ -31,7 +31,7 @@ export default function NewEventForm() {
       name: "",
       description: "",
       eventStartTime: "12:00",
-      eventEndTime: undefined,
+      eventEndTime: "",
       eventEndEnabled: false,
     },
   });
@@ -43,11 +43,11 @@ export default function NewEventForm() {
       delete values.eventEndTime;
     }
 
-    const success = await createEvent(values);
+    const error = await createEvent(values);
 
-    if (!success) {
+    if (error) {
       toast({
-        title: "Event creation failed.",
+        title: error,
         description: "Please try again later.",
         variant: "destructive",
         duration: 4000,

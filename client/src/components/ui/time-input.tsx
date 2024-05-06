@@ -8,8 +8,6 @@ export interface InputProps
 
 const TimeInput = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
-    props.value;
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       e.preventDefault();
       e.stopPropagation();

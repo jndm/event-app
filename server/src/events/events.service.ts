@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Database } from '@server/database/database';
-import { EventSelect } from '@server/database/tables/event';
 import {
   Event,
   EventCreateInput,
   EventUpdateInput,
 } from './schemas/event.schema';
 import { format } from 'date-fns';
+import { TRPCError } from '@trpc/server';
 
 @Injectable()
 export class EventService {
@@ -24,37 +24,67 @@ export class EventService {
           eventId: event.event_id,
           name: event.name,
           description: event.description,
-          eventStart: event.event_start,
-          eventEnd: event.event_end,
+          eventStart: format(
+            'yyyy-MM-ddTHH:mm:ss',
+            event.event_start.toString(),
+          ),
+          eventEnd: event.event_end
+            ? format('yyyy-MM-ddTHH:mm:ss', event.event_end.toString())
+            : undefined,
         }) ?? [],
     );
   }
 
-  async getEvent(eventId: number): Promise<EventSelect | undefined> {
-    return await this.database
+  async getEvent(eventId: number): Promise<Event> {
+    const dbEvent = await this.database
       .selectFrom('event')
       .selectAll()
       .where('event_id', '=', eventId)
       .executeTakeFirst();
+
+    if (!dbEvent) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Event not found',
+      });
+    }
+
+    return {
+      eventId: dbEvent.event_id,
+      name: dbEvent.name,
+      description: dbEvent.description,
+      eventStart: dbEvent.event_start.toString(),
+      eventEnd: dbEvent.event_end?.toString(),
+    };
   }
 
-  async addEvent(input: EventCreateInput): Promise<void> {
-    console.log('input', input);
-    await this.database //
+  async addEvent(input: EventCreateInput): Promise<Event> {
+    const dbEvent = {
+      name: input.name,
+      description: input.description,
+      event_start: new Date(
+        `${format(input.eventStartDate, 'yyyy-MM-dd')}T${input.eventStartTime}`,
+      ),
+      event_end: input.eventEndDate
+        ? new Date(
+            `${format(input.eventEndDate, 'yyyy-MM-dd')}T${input.eventEndTime}`,
+          )
+        : undefined,
+    };
+
+    const created = await this.database //
       .insertInto('event')
-      .values({
-        name: input.name,
-        description: input.description,
-        event_start: new Date(
-          `${format(input.eventStartDate, 'yyyy-MM-dd')}T${input.eventStartTime}`,
-        ),
-        event_end: input.eventEndDate
-          ? new Date(
-              `${format(input.eventEndDate, 'yyyy-MM-dd')}T${input.eventEndTime}`,
-            )
-          : undefined,
-      })
-      .executeTakeFirst();
+      .values(dbEvent)
+      .returning('event_id')
+      .executeTakeFirstOrThrow();
+
+    return {
+      eventId: created.event_id,
+      name: dbEvent.name,
+      description: dbEvent.description,
+      eventStart: dbEvent.event_start.toString(),
+      eventEnd: dbEvent.event_end?.toString(),
+    };
   }
 
   async updateEvent(input: EventUpdateInput): Promise<void> {

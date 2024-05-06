@@ -3,9 +3,9 @@ import { z } from 'zod';
 export type Event = {
   eventId: number;
   name: string;
-  description: string | undefined;
-  eventStart: Date;
-  eventEnd: Date | undefined;
+  description?: string;
+  eventStart: string;
+  eventEnd?: string;
 };
 
 export const eventCreateSchema = z

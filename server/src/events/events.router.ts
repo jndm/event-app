@@ -8,6 +8,7 @@ import {
 import { TrpcService } from '@server/trpc/trpc.service';
 import { EventService } from './events.service';
 import { TRPCError } from '@trpc/server';
+import { z } from 'zod';
 
 @Injectable()
 export class EventRouter {
@@ -20,6 +21,12 @@ export class EventRouter {
     getAll: this.trpcService.procedure //
       .query(async (): Promise<Event[]> => {
         return await this.eventService.getEvents();
+      }),
+
+    get: this.trpcService.procedure
+      .input(z.number())
+      .query(async ({ input }): Promise<Event> => {
+        return await this.eventService.getEvent(input);
       }),
 
     add: this.trpcService.procedure

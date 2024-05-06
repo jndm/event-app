@@ -5,8 +5,6 @@ import { unstable_cache } from "next/cache";
 import { format } from "date-fns";
 
 export default async function EventsPage() {
-  console.log("EventsPage init");
-
   const events = await unstable_cache(
     async () => trpc.events.getAll.query(),
     ["all-events"],
