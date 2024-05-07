@@ -43,6 +43,8 @@ export default function NewEventForm() {
       delete values.eventEndTime;
     }
 
+    // TODO: Should trigger overlay loader until redirected
+
     const error = await createEvent(values);
 
     if (error) {
@@ -65,7 +67,7 @@ export default function NewEventForm() {
 
   return (
     <>
-      <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+      <h2 className="border-b pb-2 text-3xl font-semibold tracking-tight">
         Create Event
       </h2>
 
@@ -100,7 +102,7 @@ export default function NewEventForm() {
               </FormItem>
             )}
           />
-          <div className="flex flex-row gap-8">
+          <div className="flex flex-wrap gap-8">
             <FormField
               control={form.control}
               name="eventStartDate"
@@ -149,7 +151,7 @@ export default function NewEventForm() {
           />
 
           {form.getValues().eventEndEnabled && (
-            <div className="flex flex-row gap-8">
+            <div className="flex flex-wrap gap-8">
               <FormField
                 control={form.control}
                 name="eventEndDate"
