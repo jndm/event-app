@@ -10,6 +10,7 @@ export interface EventTable {
   event_id: Generated<number>;
   name: string;
   description: string | undefined;
+  salt: string;
   event_start: Date;
   event_end: Date | undefined;
   created_at: Generated<Date>;

@@ -2,27 +2,29 @@ import { trpc } from "@client/lib/trpc";
 import { unstable_cache } from "next/cache";
 import DeleteEventButton from "../(components)/deleteFormButton";
 import { format } from "date-fns";
-import { Event } from "@server/events/schemas/event.schema";
 import { notFound } from "next/navigation";
 
 export default async function EventPage({
   params,
 }: {
-  params: { id: string };
+  params: { slug: string[] };
 }) {
-  const getEvent = async (id: string) => {
+  const encryptedId = params.slug[0];
+  const salt = params.slug[1];
+
+  const getEvent = async (encryptedId: string, salt: string) => {
     try {
       return await unstable_cache(
-        async () => trpc.events.get.query(parseInt(id)),
-        [`event-${id}`],
-        { tags: [`event-${id}`] }
+        async () => trpc.events.get.query({ encryptedId, salt }),
+        [`event-${encryptedId}-${salt}`],
+        { tags: [`event-${encryptedId}-${salt}`] }
       )();
     } catch (error) {
       return undefined;
     }
   };
 
-  const event = await getEvent(params.id);
+  const event = await getEvent(encryptedId, salt);
 
   if (!event) {
     return notFound();
@@ -36,7 +38,7 @@ export default async function EventPage({
       <div className="space-y-2">
         <h2 className="text-2xl font-semibold tracking-tight">{event.name}</h2>
         <div className="flex flex-col justify-between">
-          <p className="text-lg">{event.eventId}</p>
+          <p className="text-lg">{event.encryptedId}</p>
           <p className="text-lg">{event.description}</p>
           <p className="text-lg">
             Starting: {format(new Date(event.eventStart), "dd.MM.yyyy HH:mm")}
@@ -47,7 +49,10 @@ export default async function EventPage({
               ? format(new Date(event.eventEnd), "dd.MM.yyyy HH:mm")
               : "-"}
           </p>
-          <DeleteEventButton eventId={event.eventId}></DeleteEventButton>
+          <DeleteEventButton
+            eventEncryptedId={encryptedId}
+            salt={salt}
+          ></DeleteEventButton>
         </div>
       </div>
     </div>

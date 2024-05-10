@@ -5,11 +5,14 @@ import { deleteEvent } from "../(actions)/event.actions";
 import { useToast } from "@client/components/ui/use-toast";
 import { Trash2 } from "lucide-react";
 
-export default function DeleteEventButton(props: { eventId: number }) {
+export default function DeleteEventButton(props: {
+  eventEncryptedId: string;
+  salt: string;
+}) {
   const { toast } = useToast();
 
-  async function handleDelete(eventId: number) {
-    const success = await deleteEvent(eventId);
+  async function handleDelete(encryptedId: string, salt: string) {
+    const success = await deleteEvent(encryptedId, salt);
 
     if (!success) {
       toast({
@@ -28,7 +31,7 @@ export default function DeleteEventButton(props: { eventId: number }) {
     <Button
       variant="destructive"
       size="icon"
-      onClick={() => handleDelete(props.eventId)}
+      onClick={() => handleDelete(props.eventEncryptedId, props.salt)}
     >
       <Trash2 className="h-4 w-4" />
     </Button>

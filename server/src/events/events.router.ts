@@ -2,13 +2,12 @@ import { Injectable } from '@nestjs/common';
 import {
   Event,
   eventCreateSchema,
-  eventDeleteSchema,
   eventUpdateSchema,
+  eventGetSchema,
 } from '@server/events/schemas/event.schema';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { EventService } from './events.service';
 import { TRPCError } from '@trpc/server';
-import { z } from 'zod';
 
 @Injectable()
 export class EventRouter {
@@ -24,9 +23,9 @@ export class EventRouter {
       }),
 
     get: this.trpcService.procedure
-      .input(z.number())
+      .input({ ...eventGetSchema })
       .query(async ({ input }): Promise<Event> => {
-        return await this.eventService.getEvent(input);
+        return await this.eventService.getEvent(input.encryptedId, input.salt);
       }),
 
     add: this.trpcService.procedure
@@ -36,15 +35,21 @@ export class EventRouter {
       }),
 
     delete: this.trpcService.procedure
-      .input({ ...eventDeleteSchema })
+      .input({ ...eventGetSchema })
       .mutation(async ({ input }) => {
-        return await this.eventService.deleteEvent(input.eventId);
+        return await this.eventService.deleteEvent(
+          input.encryptedId,
+          input.salt,
+        );
       }),
 
     update: this.trpcService.procedure
       .input({ ...eventUpdateSchema })
       .mutation(async ({ input }) => {
-        const existing = await this.eventService.getEvent(input.eventId);
+        const existing = await this.eventService.getEvent(
+          input.encryptedId,
+          input.salt,
+        );
 
         // TODO: Consider moving to service with custom error type
         if (!existing) {

@@ -1,11 +1,12 @@
 import { z } from 'zod';
 
 export type Event = {
-  eventId: number;
   name: string;
   description?: string;
   eventStart: string;
   eventEnd?: string;
+  salt: string;
+  encryptedId: string;
 };
 
 export const eventCreateSchema = z
@@ -77,7 +78,8 @@ export const eventCreateSchema = z
   });
 
 export const eventUpdateSchema = z.object({
-  eventId: z.number(),
+  encryptedId: z.string(),
+  salt: z.string(),
   name: z
     .string()
     .min(2, { message: 'Event name must be at least 2 characters' })
@@ -89,10 +91,11 @@ export const eventUpdateSchema = z.object({
     }),
 });
 
-export const eventDeleteSchema = z.object({
-  eventId: z.number(),
+export const eventGetSchema = z.object({
+  encryptedId: z.string(),
+  salt: z.string(),
 });
 
 export type EventCreateInput = z.infer<typeof eventCreateSchema>;
 export type EventUpdateInput = z.infer<typeof eventUpdateSchema>;
-export type EventDeleteInput = z.infer<typeof eventDeleteSchema>;
+export type EventGetInput = z.infer<typeof eventGetSchema>;

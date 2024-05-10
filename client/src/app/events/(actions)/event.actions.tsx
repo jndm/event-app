@@ -22,12 +22,12 @@ export async function createEvent(values: EventCreateInput) {
     return "Failed to create event";
   }
 
-  redirect(`/events/${created.eventId}`);
+  redirect(`/events/${created.encryptedId}/${created.salt}`);
 }
 
-export async function deleteEvent(eventId: number) {
+export async function deleteEvent(encryptedId: string, salt: string) {
   try {
-    await trpc.events.delete.mutate({ eventId });
+    await trpc.events.delete.mutate({ encryptedId, salt });
     revalidateTag("all-events");
 
     return true;

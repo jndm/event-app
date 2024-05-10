@@ -7,10 +7,14 @@ import {
 } from './schemas/event.schema';
 import { format } from 'date-fns';
 import { TRPCError } from '@trpc/server';
+import { CryptoService } from '@server/crypto.service';
 
 @Injectable()
 export class EventService {
-  constructor(private readonly database: Database) {}
+  constructor(
+    private readonly database: Database,
+    private readonly cryptoService: CryptoService,
+  ) {}
 
   async getEvents(): Promise<Event[]> {
     const dbEvents = await this.database //
@@ -21,7 +25,10 @@ export class EventService {
     return dbEvents.map(
       (event): Event =>
         ({
-          eventId: event.event_id,
+          encryptedId: this.cryptoService.encryptEventId(
+            event.event_id,
+            event.salt,
+          ),
           name: event.name,
           description: event.description,
           eventStart: format(
@@ -31,11 +38,22 @@ export class EventService {
           eventEnd: event.event_end
             ? format('yyyy-MM-ddTHH:mm:ss', event.event_end.toString())
             : undefined,
+
+          salt: event.salt,
         }) ?? [],
     );
   }
 
-  async getEvent(eventId: number): Promise<Event> {
+  async getEvent(encryptedId: string, salt: string): Promise<Event> {
+    const eventId = this.cryptoService.decryptEventId(encryptedId, salt);
+
+    if (Number.isNaN(eventId)) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Invalid event ID',
+      });
+    }
+
     const dbEvent = await this.database
       .selectFrom('event')
       .selectAll()
@@ -50,15 +68,21 @@ export class EventService {
     }
 
     return {
-      eventId: dbEvent.event_id,
       name: dbEvent.name,
       description: dbEvent.description,
       eventStart: dbEvent.event_start.toString(),
       eventEnd: dbEvent.event_end?.toString(),
+      encryptedId: this.cryptoService.encryptEventId(
+        dbEvent.event_id,
+        dbEvent.salt,
+      ),
+      salt: dbEvent.salt,
     };
   }
 
   async addEvent(input: EventCreateInput): Promise<Event> {
+    const salt = this.cryptoService.generateSalt();
+
     const dbEvent = {
       name: input.name,
       description: input.description,
@@ -70,6 +94,7 @@ export class EventService {
             `${format(input.eventEndDate, 'yyyy-MM-dd')}T${input.eventEndTime}`,
           )
         : undefined,
+      salt: salt,
     };
 
     const created = await this.database //
@@ -79,16 +104,17 @@ export class EventService {
       .executeTakeFirstOrThrow();
 
     return {
-      eventId: created.event_id,
       name: dbEvent.name,
       description: dbEvent.description,
       eventStart: dbEvent.event_start.toString(),
       eventEnd: dbEvent.event_end?.toString(),
+      encryptedId: this.cryptoService.encryptEventId(created.event_id, salt),
+      salt: salt,
     };
   }
 
   async updateEvent(input: EventUpdateInput): Promise<void> {
-    if (!input.eventId) throw new Error('event_id is required');
+    const eventId = this.getEventId(input.encryptedId, input.salt);
 
     await this.database
       .updateTable('event')
@@ -96,14 +122,18 @@ export class EventService {
         name: input.name,
         description: input.description,
       })
-      .where('event_id', '=', input.eventId)
+      .where('event_id', '=', eventId)
       .executeTakeFirst();
   }
 
-  async deleteEvent(eventId: number): Promise<void> {
+  async deleteEvent(encryptedEventId: string, salt: string): Promise<void> {
+    const eventId = this.getEventId(encryptedEventId, salt);
     await this.database
       .deleteFrom('event')
       .where('event_id', '=', eventId)
       .executeTakeFirst();
   }
+
+  private getEventId = (encryptedId: string, salt: string) =>
+    this.cryptoService.decryptEventId(encryptedId, salt);
 }
