@@ -44,16 +44,7 @@ export class EventService {
     );
   }
 
-  async getEvent(encryptedId: string, salt: string): Promise<Event> {
-    const eventId = this.cryptoService.decryptEventId(encryptedId, salt);
-
-    if (Number.isNaN(eventId)) {
-      throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'Invalid event ID',
-      });
-    }
-
+  async getEvent(eventId: number): Promise<Event> {
     const dbEvent = await this.database
       .selectFrom('event')
       .selectAll()
@@ -97,7 +88,7 @@ export class EventService {
       salt: salt,
     };
 
-    const created = await this.database //
+    const created = await this.database
       .insertInto('event')
       .values(dbEvent)
       .returning('event_id')
@@ -113,8 +104,9 @@ export class EventService {
     };
   }
 
-  async updateEvent(input: EventUpdateInput): Promise<void> {
-    const eventId = this.getEventId(input.encryptedId, input.salt);
+  async updateEvent(eventId: number, input: EventUpdateInput): Promise<void> {
+    // Verify exists
+    this.getEvent(eventId);
 
     await this.database
       .updateTable('event')
@@ -126,14 +118,13 @@ export class EventService {
       .executeTakeFirst();
   }
 
-  async deleteEvent(encryptedEventId: string, salt: string): Promise<void> {
-    const eventId = this.getEventId(encryptedEventId, salt);
+  async deleteEvent(eventId: number): Promise<void> {
     await this.database
       .deleteFrom('event')
       .where('event_id', '=', eventId)
       .executeTakeFirst();
   }
 
-  private getEventId = (encryptedId: string, salt: string) =>
+  getEventId = (encryptedId: string, salt: string) =>
     this.cryptoService.decryptEventId(encryptedId, salt);
 }

@@ -14,6 +14,16 @@ const sendCreateEvent = async (values: EventCreateInput) => {
   }
 };
 
+const sendDeleteEvent = async (encryptedId: string, salt: string) => {
+  try {
+    await trpc.events.delete.mutate({ encryptedId, salt });
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
 export async function createEvent(values: EventCreateInput) {
   // For some reason (apparently a bug in redirect) it does not work if surrounded with try/catch so call separate function
   const created = await sendCreateEvent(values);
@@ -26,13 +36,12 @@ export async function createEvent(values: EventCreateInput) {
 }
 
 export async function deleteEvent(encryptedId: string, salt: string) {
-  try {
-    await trpc.events.delete.mutate({ encryptedId, salt });
-    revalidateTag("all-events");
+  const success = await sendDeleteEvent(encryptedId, salt);
 
-    return true;
-  } catch (error) {
-    console.error(error);
-    return false;
+  if (!success) {
+    return "Failed to create event";
   }
+
+  revalidateTag(`event-${encryptedId}-${salt}`);
+  redirect(`/events`);
 }

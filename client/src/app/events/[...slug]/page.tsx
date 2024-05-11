@@ -1,8 +1,8 @@
 import { trpc } from "@client/lib/trpc";
 import { unstable_cache } from "next/cache";
-import DeleteEventButton from "../(components)/deleteFormButton";
 import { format } from "date-fns";
 import { notFound } from "next/navigation";
+import DeleteEventButton from "./(components)/deleteFormButton";
 
 export default async function EventPage({
   params,

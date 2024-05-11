@@ -16,16 +16,36 @@ export class EventRouter {
     private readonly eventService: EventService,
   ) {}
 
+  // Middleware to decrypt the event ID, used for all procedures that require an event id
+  decryptEventIdProcedure = this.trpcService.procedure.use(
+    async ({ next, rawInput, ctx }) => {
+      const result = eventGetSchema.safeParse(rawInput);
+      if (!result.success) throw new TRPCError({ code: 'BAD_REQUEST' });
+      const { encryptedId, salt } = result.data;
+
+      const eventId = this.eventService.getEventId(encryptedId, salt);
+
+      if (Number.isNaN(eventId)) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Invalid event ID',
+        });
+      }
+
+      return next({ ctx: { ...ctx, eventId } });
+    },
+  );
+
   router = this.trpcService.router({
     getAll: this.trpcService.procedure //
       .query(async (): Promise<Event[]> => {
         return await this.eventService.getEvents();
       }),
 
-    get: this.trpcService.procedure
+    get: this.decryptEventIdProcedure
       .input({ ...eventGetSchema })
-      .query(async ({ input }): Promise<Event> => {
-        return await this.eventService.getEvent(input.encryptedId, input.salt);
+      .query(async ({ ctx }): Promise<Event> => {
+        return await this.eventService.getEvent(ctx.eventId);
       }),
 
     add: this.trpcService.procedure
@@ -34,32 +54,16 @@ export class EventRouter {
         return await this.eventService.addEvent(input);
       }),
 
-    delete: this.trpcService.procedure
+    delete: this.decryptEventIdProcedure
       .input({ ...eventGetSchema })
-      .mutation(async ({ input }) => {
-        return await this.eventService.deleteEvent(
-          input.encryptedId,
-          input.salt,
-        );
+      .mutation(async ({ ctx }) => {
+        return await this.eventService.deleteEvent(ctx.eventId);
       }),
 
-    update: this.trpcService.procedure
+    update: this.decryptEventIdProcedure
       .input({ ...eventUpdateSchema })
-      .mutation(async ({ input }) => {
-        const existing = await this.eventService.getEvent(
-          input.encryptedId,
-          input.salt,
-        );
-
-        // TODO: Consider moving to service with custom error type
-        if (!existing) {
-          throw new TRPCError({
-            code: 'NOT_FOUND',
-            message: 'Event not found',
-          });
-        }
-
-        return await this.eventService.updateEvent(input);
+      .mutation(async ({ ctx, input }) => {
+        return await this.eventService.updateEvent(ctx.eventId, input);
       }),
   });
 }

@@ -1,9 +1,9 @@
 "use client";
 
 import { Button } from "@client/components/ui/button";
-import { deleteEvent } from "../(actions)/event.actions";
 import { useToast } from "@client/components/ui/use-toast";
 import { Trash2 } from "lucide-react";
+import { deleteEvent } from "@client/app/events/(actions)/event.actions";
 
 export default function DeleteEventButton(props: {
   eventEncryptedId: string;
@@ -12,9 +12,9 @@ export default function DeleteEventButton(props: {
   const { toast } = useToast();
 
   async function handleDelete(encryptedId: string, salt: string) {
-    const success = await deleteEvent(encryptedId, salt);
+    const errorMessage = await deleteEvent(encryptedId, salt);
 
-    if (!success) {
+    if (!!errorMessage) {
       toast({
         title: "Event deletion failed.",
         description: "Please try again later.",
