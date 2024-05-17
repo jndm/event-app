@@ -21,6 +21,7 @@ import { createEvent } from "../(actions)/event.actions";
 import { DatePicker } from "@client/components/ui/datepicker";
 import { TimeInput } from "@client/components/ui/time-input";
 import { Switch } from "@client/components/ui/switch";
+import { Textarea } from "@client/components/ui/textarea";
 
 export default function NewEventForm() {
   const { toast } = useToast();
@@ -96,7 +97,7 @@ export default function NewEventForm() {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Textarea {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
