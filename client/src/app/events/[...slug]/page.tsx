@@ -77,7 +77,6 @@ export default async function EventPage({
         <div className="flex justify-end items-end">
           <div className="flex justify-end items-end space-x-2">
             <Button>Attending</Button>
-            <Button variant={"outline"}>Maybe</Button>
             <Button variant={"outline"}>Reject</Button>
           </div>
         </div>

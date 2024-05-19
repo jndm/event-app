@@ -8,6 +8,7 @@ import {
 import { format } from 'date-fns';
 import { TRPCError } from '@trpc/server';
 import { CryptoService } from '@server/crypto.service';
+import { Participant, ParticipantAddInput } from './schemas/participant.schema';
 
 @Injectable()
 export class EventService {
@@ -106,7 +107,7 @@ export class EventService {
 
   async updateEvent(eventId: number, input: EventUpdateInput): Promise<void> {
     // Verify exists
-    this.getEvent(eventId);
+    await this.getEvent(eventId);
 
     await this.database
       .updateTable('event')
@@ -127,4 +128,32 @@ export class EventService {
 
   getEventId = (encryptedId: string, salt: string) =>
     this.cryptoService.decryptEventId(encryptedId, salt);
+
+  async addParticipant(
+    eventId: number,
+    input: ParticipantAddInput,
+  ): Promise<Participant> {
+    await this.getEvent(eventId); // Verify exists
+
+    const added = await this.database
+      .insertInto('participant')
+      .values({
+        event_id: eventId,
+        first_name: input.first_name,
+        last_name: input.last_name,
+        email: input.email,
+        phone: input.phone,
+      })
+      .returning(['participant_id', 'created_at'])
+      .executeTakeFirstOrThrow();
+
+    return {
+      participant_id: added.participant_id,
+      first_name: input.first_name,
+      last_name: input.last_name,
+      email: input.email,
+      phone: input.phone,
+      created_at: added.created_at,
+    };
+  }
 }

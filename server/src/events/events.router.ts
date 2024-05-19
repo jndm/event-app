@@ -8,6 +8,7 @@ import {
 import { TrpcService } from '@server/trpc/trpc.service';
 import { EventService } from './events.service';
 import { TRPCError } from '@trpc/server';
+import { participantAddSchema } from './schemas/participant.schema';
 
 @Injectable()
 export class EventRouter {
@@ -64,6 +65,12 @@ export class EventRouter {
       .input({ ...eventUpdateSchema })
       .mutation(async ({ ctx, input }) => {
         return await this.eventService.updateEvent(ctx.eventId, input);
+      }),
+
+    addParticipant: this.decryptEventIdProcedure
+      .input({ ...participantAddSchema })
+      .mutation(async ({ ctx, input }) => {
+        return await this.eventService.addParticipant(ctx.eventId, input);
       }),
   });
 }
