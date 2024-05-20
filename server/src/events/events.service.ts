@@ -8,7 +8,10 @@ import {
 import { format } from 'date-fns';
 import { TRPCError } from '@trpc/server';
 import { CryptoService } from '@server/crypto.service';
-import { Participant, ParticipantAddInput } from './schemas/participant.schema';
+import {
+  EventRegistration,
+  EventRegistrationAddInput,
+} from './schemas/event-registration.schema';
 
 @Injectable()
 export class EventService {
@@ -129,31 +132,33 @@ export class EventService {
   getEventId = (encryptedId: string, salt: string) =>
     this.cryptoService.decryptEventId(encryptedId, salt);
 
-  async addParticipant(
+  async addEventRegistration(
     eventId: number,
-    input: ParticipantAddInput,
-  ): Promise<Participant> {
+    input: EventRegistrationAddInput,
+  ): Promise<EventRegistration> {
     await this.getEvent(eventId); // Verify exists
 
     const added = await this.database
-      .insertInto('participant')
+      .insertInto('event_registration')
       .values({
         event_id: eventId,
-        first_name: input.first_name,
-        last_name: input.last_name,
+        registration_type: input.registrationType,
+        first_name: input.firstName,
+        last_name: input.lastName,
         email: input.email,
         phone: input.phone,
       })
-      .returning(['participant_id', 'created_at'])
+      .returning(['event_registration_id', 'created_at'])
       .executeTakeFirstOrThrow();
 
     return {
-      participant_id: added.participant_id,
-      first_name: input.first_name,
-      last_name: input.last_name,
+      eventRegistrationId: added.event_registration_id,
+      registrationType: input.registrationType,
+      firstName: input.firstName,
+      lastName: input.lastName,
       email: input.email,
       phone: input.phone,
-      created_at: added.created_at,
+      createdAt: added.created_at,
     };
   }
 }

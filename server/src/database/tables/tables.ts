@@ -1,8 +1,8 @@
 import { EventTable } from './event';
-import { ParticipantTable } from './participant';
+import { EventRegistrationTable } from './event-registration';
 
 export interface Tables {
   event: EventTable;
-  participant: ParticipantTable;
+  event_registration: EventRegistrationTable;
   // more tables here...
 }
