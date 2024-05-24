@@ -8,10 +8,8 @@ export async function up(db: Kysely<any>): Promise<void> {
       col.references('event.event_id').onDelete('cascade').notNull(),
     )
     .addColumn('registration_type', 'integer', (col) => col.notNull())
-    .addColumn('first_name', 'varchar(200)', (col) => col.notNull())
-    .addColumn('last_name', 'varchar(200)', (col) => col.notNull())
+    .addColumn('name', 'varchar(200)', (col) => col.notNull())
     .addColumn('email', 'varchar(200)', (col) => col.notNull())
-    .addColumn('phone', 'varchar(20)', (col) => col.notNull())
     .addColumn('created_at', 'timestamptz', (col) =>
       col.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
     )

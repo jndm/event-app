@@ -7,6 +7,7 @@ import Image from "next/image";
 import { CalendarClockIcon, MapPinIcon, UserCheck } from "lucide-react";
 import { Separator } from "@client/components/ui/separator";
 import { Button } from "@client/components/ui/button";
+import EventRegistrationActions from "./(components)/eventRegistrationActions";
 
 export default async function EventPage({
   params,
@@ -33,6 +34,8 @@ export default async function EventPage({
   if (!event) {
     return notFound();
   }
+
+  function handleAttendingClick(): void {}
 
   return (
     <div>
@@ -75,10 +78,7 @@ export default async function EventPage({
         </div>
 
         <div className="flex justify-end items-end">
-          <div className="flex justify-end items-end space-x-2">
-            <Button>Attending</Button>
-            <Button variant={"outline"}>Reject</Button>
-          </div>
+          <EventRegistrationActions />
         </div>
       </div>
 

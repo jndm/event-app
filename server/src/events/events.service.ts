@@ -143,10 +143,8 @@ export class EventService {
       .values({
         event_id: eventId,
         registration_type: input.registrationType,
-        first_name: input.firstName,
-        last_name: input.lastName,
+        name: input.name,
         email: input.email,
-        phone: input.phone,
       })
       .returning(['event_registration_id', 'created_at'])
       .executeTakeFirstOrThrow();
@@ -154,10 +152,8 @@ export class EventService {
     return {
       eventRegistrationId: added.event_registration_id,
       registrationType: input.registrationType,
-      firstName: input.firstName,
-      lastName: input.lastName,
+      name: input.name,
       email: input.email,
-      phone: input.phone,
       createdAt: added.created_at,
     };
   }
