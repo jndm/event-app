@@ -17,7 +17,10 @@ export const HeaderButtons = () => {
           })}
           href={"/events"}
         >
-          Create Event
+          <div className="flex flex-row gap-1 items-center">
+            <CalendarPlus className="h-6 w-6" />
+            <span>Create Event</span>
+          </div>
         </Link>
         <Link
           className={buttonVariants({
@@ -26,7 +29,10 @@ export const HeaderButtons = () => {
           })}
           href={"/login"}
         >
-          Login
+          <div className="flex flex-row gap-1 items-center">
+            <CircleUserRound className="h-6 w-6" />
+            <span>Login</span>
+          </div>
         </Link>
       </div>
     );
