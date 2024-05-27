@@ -6,7 +6,6 @@ import DeleteEventButton from "./(components)/deleteFormButton";
 import Image from "next/image";
 import { CalendarClockIcon, MapPinIcon, UserCheck } from "lucide-react";
 import { Separator } from "@client/components/ui/separator";
-import { Button } from "@client/components/ui/button";
 import EventRegistrationActions from "./(components)/eventRegistrationActions";
 
 export default async function EventPage({
@@ -34,8 +33,6 @@ export default async function EventPage({
   if (!event) {
     return notFound();
   }
-
-  function handleAttendingClick(): void {}
 
   return (
     <div>
@@ -78,7 +75,10 @@ export default async function EventPage({
         </div>
 
         <div className="flex justify-end items-end">
-          <EventRegistrationActions />
+          <EventRegistrationActions
+            eventEncryptedId={encryptedId}
+            salt={salt}
+          />
         </div>
       </div>
 
