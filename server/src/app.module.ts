@@ -5,6 +5,7 @@ import { TestModule } from './test/test.module';
 import { EventsModule } from './events/events.module';
 import { TrpcModule } from './trpc/trpc.module';
 import { KyselyModule } from './database/kysely.module';
+import { HealthController } from './health/health.controller';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { KyselyModule } from './database/kysely.module';
     TestModule,
     EventsModule,
   ],
-  controllers: [],
+  controllers: [HealthController],
   providers: [AppRouter],
 })
 export class AppModule {}
