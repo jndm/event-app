@@ -101,7 +101,7 @@ export const reducer = (state: State, action: Action): State => {
         addToRemoveQueue(toastId, duration);
       } else {
         state.toasts.forEach((toast) => {
-          addToRemoveQueue(toast.toastId, toast.duration);
+          addToRemoveQueue(toast.id, toast.duration);
         });
       }
 
