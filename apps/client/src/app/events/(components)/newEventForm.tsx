@@ -11,10 +11,7 @@ import {
 } from "@client/components/ui/form";
 import { Input } from "@client/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  EventCreateInput,
-  eventCreateSchema,
-} from "@server/events/schemas/event.schema";
+import { EventCreateInput, eventCreateSchema } from "@schema/event.schema";
 import { useForm } from "react-hook-form";
 import { useToast } from "@client/components/ui/use-toast";
 import { createEvent } from "../(actions)/event.actions";
