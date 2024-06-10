@@ -4,14 +4,14 @@ import {
   Event,
   EventCreateInput,
   EventUpdateInput,
-} from './schemas/event.schema';
+} from '@schema/event.schema';
 import { format } from 'date-fns';
 import { TRPCError } from '@trpc/server';
 import { CryptoService } from '@server/crypto.service';
 import {
   EventRegistration,
   EventRegistrationAddInput,
-} from './schemas/event-registration.schema';
+} from '@schema/event-registration.schema';
 
 @Injectable()
 export class EventService {

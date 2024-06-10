@@ -1,7 +1,7 @@
 "use server";
 
 import { trpc } from "@client/lib/trpc";
-import { EventCreateInput } from "@server/events/schemas/event.schema";
+import { EventCreateInput } from "@schema/event.schema";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -9,7 +9,6 @@ const sendCreateEvent = async (values: EventCreateInput) => {
   try {
     return await trpc.events.add.mutate(values);
   } catch (error) {
-    console.error(error);
     return undefined;
   }
 };
