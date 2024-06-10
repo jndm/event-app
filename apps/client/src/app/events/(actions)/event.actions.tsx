@@ -9,6 +9,7 @@ const sendCreateEvent = async (values: EventCreateInput) => {
   try {
     return await trpc.events.add.mutate(values);
   } catch (error) {
+    console.error(error);
     return undefined;
   }
 };

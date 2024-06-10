@@ -18,7 +18,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migrations:local": "node -r ts-node/register --env-file=.env run-migrations.ts"
+    "migrations:local": "node -r ts-node/register --env-file=.env run-migrations.ts",
+    "migrations:prod": "node -r ts-node/register --env-file=.env.production.local run-migrations.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
