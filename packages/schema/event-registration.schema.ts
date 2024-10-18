@@ -1,5 +1,9 @@
-import { EventRegistrationType } from "@server/database/tables/event-registration";
 import { z } from "zod";
+
+export enum EventRegistrationType {
+  Attend = 1,
+  Rejected = 99,
+}
 
 export interface EventRegistration {
   eventRegistrationId: number;

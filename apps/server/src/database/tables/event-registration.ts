@@ -1,9 +1,5 @@
 import { Generated, Insertable, Selectable, Updateable } from 'kysely';
-
-export enum EventRegistrationType {
-  Attend = 1,
-  Rejected = 99,
-}
+import { EventRegistrationType } from '@schema/event-registration.schema';
 
 export interface EventRegistrationTable {
   event_registration_id: Generated<number>;

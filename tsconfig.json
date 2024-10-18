@@ -3,7 +3,8 @@
     "baseUrl": ".",
     "paths": {
       "@server/*": ["./apps/server/src/*"],
-      "@client/*": ["./apps/client/src/*"]
+      "@client/*": ["./apps/client/src/*"],
+      "@schema/*": ["./packages/schema/*"]
     }
   }
 }

@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import {
-  Event,
-  eventCreateSchema,
-  eventUpdateSchema,
-  eventGetSchema,
-} from '@server/events/schemas/event.schema';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { EventService } from './events.service';
 import { TRPCError } from '@trpc/server';
-import { eventRegistrationAddSchema } from './schemas/event-registration.schema';
+import {
+  Event,
+  eventCreateSchema,
+  eventGetSchema,
+  eventUpdateSchema,
+} from '@schema/event.schema';
+import { eventRegistrationAddSchema } from '@schema/event-registration.schema';
 
 @Injectable()
 export class EventRouter {

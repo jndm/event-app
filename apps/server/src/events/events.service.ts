@@ -27,24 +27,20 @@ export class EventService {
       .execute();
 
     return dbEvents.map(
-      (event): Event =>
-        ({
-          encryptedId: this.cryptoService.encryptEventId(
-            event.event_id,
-            event.salt,
-          ),
-          name: event.name,
-          description: event.description,
-          eventStart: format(
-            'yyyy-MM-ddTHH:mm:ss',
-            event.event_start.toString(),
-          ),
-          eventEnd: event.event_end
-            ? format('yyyy-MM-ddTHH:mm:ss', event.event_end.toString())
-            : undefined,
+      (event): Event => ({
+        encryptedId: this.cryptoService.encryptEventId(
+          event.event_id,
+          event.salt,
+        ),
+        name: event.name,
+        description: event.description,
+        eventStart: format('yyyy-MM-ddTHH:mm:ss', event.event_start.toString()),
+        eventEnd: event.event_end
+          ? format('yyyy-MM-ddTHH:mm:ss', event.event_end.toString())
+          : undefined,
 
-          salt: event.salt,
-        }) ?? [],
+        salt: event.salt,
+      }),
     );
   }
 
